@@ -19,6 +19,9 @@ WIDTH, HEIGHT = 800, 600
 PURPLE = (0, 128, 255)
 RED = (255, 0, 0)
 
+D = 10
+N = 10
+
 
 class Particle():
 
@@ -61,30 +64,27 @@ if __name__ == "__main__":
     textSurfaceObj = fontObj.render('', True, (0, 0, 0))
     textRectObj = textSurfaceObj.get_rect()
 
-    n = 10
-    particles = [Particle() for i in range(n)]
+    particles = [Particle() for i in range(N)]
 
     # Draw the simulation
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        d = 10
-
-        for i in range(0, WIDTH, d):
-            for j in range(0, HEIGHT, d):
-                x = i + d / 2
-                y = j + d / 2
+        for i in range(0, WIDTH, D):
+            for j in range(0, HEIGHT, D):
+                x = i + D / 2
+                y = j + D / 2
                 r = sum([
-                    1 / ((particles[i].x - x)**2 +
-                         (particles[i].y - y)**2)**0.5 * 5 for i in range(n)
+                    1 / ((particle.x - x)**2 + (particle.y - y)**2)**0.5 * 5
+                    for particle in particles
                 ])
                 color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
-                pygame.draw.rect(DISPLAYSURF, color, (i, j, i + d, j + d))
+                pygame.draw.rect(DISPLAYSURF, color, (i, j, i + D, j + D))
 
         draw_FPS(DISPLAYSURF)  # Write the FPS text
 
-        for i in range(n):
-            particles[i].timestep()
+        for particle in particles:
+            particle.timestep()
 
         for event in pygame.event.get():
             if event.type == QUIT:
