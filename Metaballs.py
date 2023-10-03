@@ -1,15 +1,11 @@
-# Pygame_visualization.py
-#
-# Visualization of my brownian motion script using Pygame library.
-#
-# Changelog:
-# 03.11.2016 - original script from "Brownian motion" project
-# 03.11.2018 - script for metaballs created
+"""Pygame_visualization.py
 
+Visualization of my brownian motion script using Pygame library.
+"""
 
 # Libraries import
-import pygame
 import sys
+import pygame
 import pygame.gfxdraw
 from pygame.locals import QUIT
 
@@ -42,8 +38,7 @@ class Particle():
 
 
 def draw_FPS(screen):
-    textSurfaceObj = fontObj.render("FPS: "
-                                    + str(round(fpsClock.get_fps(), 1)),
+    textSurfaceObj = fontObj.render("FPS: " + str(round(fpsClock.get_fps(), 1)),
                                     True, (0, 0, 0))
     textRectObj.topright = (699, 0)
     screen.blit(textSurfaceObj, textRectObj)
@@ -79,12 +74,12 @@ if __name__ == "__main__":
             for j in range(0, HEIGHT, d):
                 x = i + d / 2
                 y = j + d / 2
-                r = sum([1 / ((particles[i].x - x)**2 +
-                              (particles[i].y - y)**2)**0.5 * 5
-                         for i in range(n)])
+                r = sum([
+                    1 / ((particles[i].x - x)**2 +
+                         (particles[i].y - y)**2)**0.5 * 5 for i in range(n)
+                ])
                 color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
-                pygame.draw.rect(DISPLAYSURF, color,
-                                 (i, j, i + d, j + d))
+                pygame.draw.rect(DISPLAYSURF, color, (i, j, i + d, j + d))
 
         draw_FPS(DISPLAYSURF)  # Write the FPS text
 
