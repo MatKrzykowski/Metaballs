@@ -22,6 +22,8 @@ RED = (255, 0, 0)
 D = 10
 N = 10
 
+FONTSIZE = 18
+
 
 class Particle():
 
@@ -40,7 +42,7 @@ class Particle():
             self.vy *= -1
 
 
-def draw_FPS(screen):
+def draw_FPS(screen, fontObj, textRectObj):
     textSurfaceObj = fontObj.render("FPS: " + str(round(fpsClock.get_fps(), 1)),
                                     True, (0, 0, 0))
     textRectObj.topright = (699, 0)
@@ -53,35 +55,49 @@ if __name__ == "__main__":
     FPS = 60  # Frames per second
     fpsClock = pygame.time.Clock()  # Clock initialization
 
-    fontsize = 18
-
     # Prepare the display
     DISPLAYSURF = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32)
     pygame.display.set_caption('Brownian motion')
 
     # Prepare print of the text
-    fontObj = pygame.font.Font('freesansbold.ttf', fontsize)
+    fontObj = pygame.font.Font('freesansbold.ttf', FONTSIZE)
     textSurfaceObj = fontObj.render('', True, (0, 0, 0))
     textRectObj = textSurfaceObj.get_rect()
 
-    particles = [Particle() for i in range(N)]
+    particles = [Particle() for _ in range(N)]
+
+    n_x = WIDTH // D
+    n_y = HEIGHT // D
+    pos = np.zeros((n_x, n_y, 2))
+    for i in range(n_x):
+        for j in range(n_y):
+            pos[i, j, 0] = i * D + D / 2
+            pos[i, j, 1] = j * D + D / 2
+    pos = pos.reshape(n_x, n_y, 1, 2)
+
+    rect = np.zeros((n_x, n_y, 4))
+    for i in range(n_x):
+        for j in range(n_y):
+            rect[i, j, 0] = i * D
+            rect[i, j, 1] = j * D - 1
+            rect[i, j, 2] = i * D + D
+            rect[i, j, 3] = j * D + D + 1
+    print(n_x, n_y, n_x * n_y)
 
     # Draw the simulation
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        for i in range(0, WIDTH, D):
-            for j in range(0, HEIGHT, D):
-                x = i + D / 2
-                y = j + D / 2
-                r = sum([
-                    1 / ((particle.x - x)**2 + (particle.y - y)**2)**0.5 * 5
-                    for particle in particles
-                ])
-                color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
-                pygame.draw.rect(DISPLAYSURF, color, (i, j, i + D, j + D))
+        test = pos - np.array([[p.x, p.y] for p in particles]).reshape(
+            (1, 1, N, 2))
 
-        draw_FPS(DISPLAYSURF)  # Write the FPS text
+        for i in range(n_x):
+            for j in range(n_y):
+                r = np.sum(1 / np.hypot(test[i, j, :, 0], test[i, j, :, 1])) * 5
+                color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
+                pygame.draw.rect(DISPLAYSURF, color, rect[i, j, :])
+
+        draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
 
         for particle in particles:
             particle.timestep()
