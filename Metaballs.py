@@ -84,18 +84,22 @@ if __name__ == "__main__":
             rect[i, j, 3] = j * D + D + 1
     print(n_x, n_y, n_x * n_y)
 
+    inv_hypot = np.zeros((n_x, n_y, N))
+
     # Draw the simulation
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
         test = pos - np.array([[p.x, p.y] for p in particles]).reshape(
             (1, 1, N, 2))
+        inv_hypot = np.reciprocal(np.hypot(test[:, :, :, 0], test[:, :, :, 1]), out=inv_hypot)
+        sum_inv_hypot = np.sum(inv_hypot, axis=2)
 
         for i in range(n_x):
             for j in range(n_y):
-                r = np.sum(1 / np.hypot(test[i, j, :, 0], test[i, j, :, 1])) * 5
+                r = sum_inv_hypot[i, j] * 5
                 color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
-                pygame.draw.rect(DISPLAYSURF, color, rect[i, j, :])
+                pygame.draw.rect(DISPLAYSURF, color, rect[i, j])
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
 
