@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
         test = pos - np.array([[p.x, p.y] for p in particles]).transpose().reshape(
             (2, 1, 1, N))
-        inv_hypot = np.reciprocal(np.hypot(test[0, :, :, :], test[1, :, :, :]), out=inv_hypot)
+        inv_hypot = np.reciprocal(np.hypot(*test), out=inv_hypot)
         sum_inv_hypot = np.sum(inv_hypot, axis=2)
 
         for i in range(n_x):
