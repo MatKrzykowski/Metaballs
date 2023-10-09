@@ -97,8 +97,8 @@ if __name__ == "__main__":
 
         for i in range(n_x):
             for j in range(n_y):
-                r = sum_inv_hypot[i, j] * 5
-                color = (255 - min(255, 255 * r), 255, 255 - min(255, 255 * r))
+                r = int(min(255, sum_inv_hypot[i, j] * 5 * 255))
+                color = pygame.Color((255 - r) * 256**2 + 255 * 256 + 255 - r)
                 pygame.draw.rect(DISPLAYSURF, color, rect[i, j])
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
