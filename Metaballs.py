@@ -68,12 +68,12 @@ if __name__ == "__main__":
 
     n_x = WIDTH // D
     n_y = HEIGHT // D
-    pos = np.zeros((n_x, n_y, 2))
+    pos = np.zeros((2, n_x, n_y))
     for i in range(n_x):
         for j in range(n_y):
-            pos[i, j, 0] = i * D + D / 2
-            pos[i, j, 1] = j * D + D / 2
-    pos = pos.reshape(n_x, n_y, 1, 2)
+            pos[0, i, j] = i * D + D / 2
+            pos[1, i, j] = j * D + D / 2
+    pos = pos.reshape((2, n_x, n_y, 1))
 
     rect = np.zeros((n_x, n_y, 4))
     for i in range(n_x):
@@ -90,9 +90,9 @@ if __name__ == "__main__":
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        test = pos - np.array([[p.x, p.y] for p in particles]).reshape(
-            (1, 1, N, 2))
-        inv_hypot = np.reciprocal(np.hypot(test[:, :, :, 0], test[:, :, :, 1]), out=inv_hypot)
+        test = pos - np.array([[p.x, p.y] for p in particles]).transpose().reshape(
+            (2, 1, 1, N))
+        inv_hypot = np.reciprocal(np.hypot(test[0, :, :, :], test[1, :, :, :]), out=inv_hypot)
         sum_inv_hypot = np.sum(inv_hypot, axis=2)
 
         for i in range(n_x):
