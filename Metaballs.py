@@ -3,13 +3,11 @@
 Visualization of my brownian motion script using Pygame library.
 """
 
-# Libraries import
 import sys
 import pygame
 import pygame.gfxdraw
 from pygame.locals import QUIT
 
-# Libraries imports
 import numpy as np  # Import math modules
 
 from config import default_config as config
@@ -76,8 +74,11 @@ if __name__ == "__main__":
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        np.subtract(pos, np.array([[p.x, p.y] for p in particles]).transpose().reshape(
-            (2, 1, 1, config.n_particles)), out=test)
+        np.subtract(
+            pos,
+            np.array([[p.x, p.y] for p in particles]).transpose().reshape(
+                (2, 1, 1, config.n_particles)),
+            out=test)
         np.reciprocal(np.hypot(*test), out=inv_hypot)
         np.sum(inv_hypot, axis=2, out=q)
         np.multiply(5 * 255, q, out=q)
