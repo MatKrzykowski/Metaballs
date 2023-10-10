@@ -3,7 +3,8 @@
 import pygame
 
 WHITE = (255, 255, 255)
-BLACK = (  0,   0,   0)
+BLACK = (0, 0, 0)
+
 
 class Renderer():
 
@@ -11,12 +12,10 @@ class Renderer():
         self.display_surf = pygame.display.set_mode((width, height), 0, 32)
 
         # Prepare print of the text
-        self.fontObj = pygame.font.Font('freesansbold.ttf', fontsize)
-        self.textSurfaceObj = self.fontObj.render('', True, (0, 0, 0))
-        self.textRectObj = self.textSurfaceObj.get_rect()
-        self.textRectObj.topright = (width - 101, 0)
-
-        self.fps_topright = (width - 101, 0)
+        self._font = pygame.font.Font('freesansbold.ttf', fontsize)
+        self._text_surface = self._font.render('', True, (0, 0, 0))
+        self._text_rect = self._text_surface.get_rect()
+        self._text_rect.topright = (width - 101, 0)
 
     def start_frame(self, color=WHITE):
         self.display_surf.fill(color)
@@ -32,5 +31,5 @@ class Renderer():
 
     def draw_FPS(self, fps):
         fps = str(round(fps, 1))
-        self.textSurfaceObj = self.fontObj.render("FPS: " + fps, True, BLACK)
-        self.display_surf.blit(self.textSurfaceObj, self.textRectObj)
+        self._text_surface = self._font.render("FPS: " + fps, True, BLACK)
+        self.display_surf.blit(self._text_surface, self._text_rect)
