@@ -7,8 +7,9 @@ BLACK = (0, 0, 0)
 
 
 class Renderer():
+    """Class rendering frames"""
 
-    def __init__(self, width, height, fontsize):
+    def __init__(self, width: int, height: int, fontsize: int):
         self.display_surf = pygame.display.set_mode((width, height), 0, 32)
 
         # Prepare print of the text
@@ -20,7 +21,7 @@ class Renderer():
     def start_frame(self, color=WHITE):
         self.display_surf.fill(color)
 
-    def draw_frame(self, hue_arr, fps):
+    def draw_frame(self, hue_arr, fps: float):
         lol = pygame.surfarray.pixels3d(self.display_surf)
         lol[:, :, 0] = 255 - 128 * hue_arr
         lol[:, :, 1] = 255 * (1 - hue_arr)
