@@ -44,6 +44,7 @@ if __name__ == "__main__":
             pos[0, i, j] = i
             pos[1, i, j] = j
     pos = pos.reshape((2, config.width, config.height, 1))
+    pos = pos + np.zeros((2, config.width, config.height, config.n_particles))
     test = np.zeros((2, config.width, config.height, config.n_particles))
     inv_hypot = np.zeros((config.width, config.height, config.n_particles))
     q = np.zeros((config.width, config.height))
