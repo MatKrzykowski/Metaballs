@@ -60,11 +60,11 @@ if __name__ == "__main__":
         np.reciprocal(np.hypot(*test), out=inv_hypot)
         np.sum(inv_hypot, axis=2, out=q)
         np.multiply(config.particle_size * 255, q, out=q)
-        r = np.where(q > 255, 255, q)
+        np.clip(q, 0, 255, out=q)
 
         with pygame.PixelArray(DISPLAYSURF) as px_array:
             for i in range(config.width):
-                px_array[i, :] = [(255, x, 255) for x in r[i]]
+                px_array[i, :] = [(255, x, 255) for x in q[i]]
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
 
