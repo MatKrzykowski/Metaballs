@@ -62,9 +62,11 @@ if __name__ == "__main__":
         np.multiply(config.particle_size * 255, q, out=q)
         np.clip(q, 0, 255, out=q)
 
-        with pygame.PixelArray(DISPLAYSURF) as px_array:
-            for i in range(config.width):
-                px_array[i, :] = [(255, x, 255) for x in q[i]]
+        lol = pygame.surfarray.pixels3d(DISPLAYSURF)
+        lol[:, :, 0] = 255
+        lol[:, :, 1] = q
+        lol[:, :, 2] = 255
+        del lol
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
 
