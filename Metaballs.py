@@ -38,35 +38,36 @@ if __name__ == "__main__":
 
     particles = gen_particles(config.n_particles)
 
-    pos = np.zeros((2, config.width, config.height))
+    pos_grid = np.zeros((2, config.width, config.height))
     for i in range(config.width):
         for j in range(config.height):
-            pos[0, i, j] = i
-            pos[1, i, j] = j
-    pos = pos.reshape((2, config.width, config.height, 1))
-    pos = pos + np.zeros((2, config.width, config.height, config.n_particles))
-    test = np.zeros((2, config.width, config.height, config.n_particles))
-    inv_hypot = np.zeros((config.width, config.height, config.n_particles))
-    q = np.zeros((config.width, config.height))
+            pos_grid[0, i, j] = i
+            pos_grid[1, i, j] = j
+    pos_grid = pos_grid.reshape((2, config.width, config.height, 1))
+    dist_xy = np.zeros((2, config.width, config.height, config.n_particles))
+    pos_part = np.zeros((2, config.width, config.height, config.n_particles))
+    pos_grid = pos_grid + dist_xy
+    inv_dist = np.zeros((config.width, config.height, config.n_particles))
+    hue_arr = np.zeros((config.width, config.height))
 
     # Draw the simulation
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        np.subtract(
-            pos,
-            np.array([[p.x, p.y] for p in particles]).transpose().reshape(
-                (2, 1, 1, config.n_particles)),
-            out=test)
-        np.reciprocal(np.hypot(*test), out=inv_hypot)
-        np.sum(inv_hypot, axis=2, out=q)
-        np.multiply(config.particle_size, q, out=q)
-        np.clip(q, 0, 1, out=q)
+        pos_part[:, :, :, :] = np.array([[p.x, p.y] for p in particles
+                            ]).transpose().reshape(
+                                (2, 1, 1, config.n_particles))
+
+        np.subtract(pos_grid, pos_part, out=dist_xy)
+        np.reciprocal(np.hypot(dist_xy[0], dist_xy[1]), out=inv_dist)
+        np.sum(inv_dist, axis=2, out=hue_arr)
+        np.multiply(config.particle_size, hue_arr, out=hue_arr)
+        np.clip(hue_arr, 0, 1, out=hue_arr)
 
         lol = pygame.surfarray.pixels3d(DISPLAYSURF)
-        lol[:, :, 0] = 255 - 128 * q
-        lol[:, :, 1] = 255 * (1 - q)
-        lol[:, :, 2] = 255 - 128 * q
+        lol[:, :, 0] = 255 - 128 * hue_arr
+        lol[:, :, 1] = 255 * (1 - hue_arr)
+        lol[:, :, 2] = 255 - 128 * hue_arr
         del lol
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text

@@ -17,8 +17,8 @@ class Config():
 default_config = Config(
     400,  # window width
     400,  # window height
-    6,  # number of particles
+    10,  # number of particles
     20,  # average particle speed
-    15,  # Particle size
+    8,  # Particle size
     60,  # goal FPS count
 )
