@@ -11,6 +11,7 @@ from pygame.locals import QUIT
 import numpy as np  # Import math modules
 
 from config import default_config as config
+from memory import init_memory
 from particle import gen_particles
 
 FONTSIZE = 18
@@ -38,36 +39,27 @@ if __name__ == "__main__":
 
     particles = gen_particles(config.n_particles)
 
-    pos_grid = np.zeros((2, config.width, config.height))
-    for i in range(config.width):
-        for j in range(config.height):
-            pos_grid[0, i, j] = i
-            pos_grid[1, i, j] = j
-    pos_grid = pos_grid.reshape((2, config.width, config.height, 1))
-    dist_xy = np.zeros((2, config.width, config.height, config.n_particles))
-    pos_part = np.zeros((2, config.width, config.height, config.n_particles))
-    pos_grid = pos_grid + dist_xy
-    inv_dist = np.zeros((config.width, config.height, config.n_particles))
-    hue_arr = np.zeros((config.width, config.height))
+    memory = init_memory(config.width, config.height, config.n_particles)
 
     # Draw the simulation
     while True:
         DISPLAYSURF.fill((255, 255, 255))  # Clear the surface
 
-        pos_part[:, :, :, :] = np.array([[p.x, p.y] for p in particles
+        memory.pos_part[:, :, :, :] = np.array([[p.x, p.y] for p in particles
                             ]).transpose().reshape(
                                 (2, 1, 1, config.n_particles))
 
-        np.subtract(pos_grid, pos_part, out=dist_xy)
-        np.reciprocal(np.hypot(dist_xy[0], dist_xy[1]), out=inv_dist)
-        np.sum(inv_dist, axis=2, out=hue_arr)
-        np.multiply(config.particle_size, hue_arr, out=hue_arr)
-        np.clip(hue_arr, 0, 1, out=hue_arr)
+        np.subtract(memory.pos_grid, memory.pos_part, out=memory.dist_xy)
+        np.reciprocal(
+            np.hypot(memory.dist_xy[0], memory.dist_xy[1]), out=memory.inv_dist)
+        np.sum(memory.inv_dist, axis=2, out=memory.hue_arr)
+        np.multiply(config.particle_size, memory.hue_arr, out=memory.hue_arr)
+        np.clip(memory.hue_arr, 0, 1, out=memory.hue_arr)
 
         lol = pygame.surfarray.pixels3d(DISPLAYSURF)
-        lol[:, :, 0] = 255 - 128 * hue_arr
-        lol[:, :, 1] = 255 * (1 - hue_arr)
-        lol[:, :, 2] = 255 - 128 * hue_arr
+        lol[:, :, 0] = 255 - 128 * memory.hue_arr
+        lol[:, :, 1] = 255 * (1 - memory.hue_arr)
+        lol[:, :, 2] = 255 - 128 * memory.hue_arr
         del lol
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
