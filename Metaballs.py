@@ -20,7 +20,7 @@ if __name__ == "__main__":
     fpsClock = pygame.time.Clock()  # Clock initialization
 
     # Prepare the display
-    pygame.display.set_caption('Brownian motion')
+    pygame.display.set_caption('Metaballs')
 
     particles = gen_particles(config.n_particles)
 
