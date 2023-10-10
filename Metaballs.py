@@ -6,7 +6,6 @@ Visualization of my brownian motion script using Pygame library.
 import sys
 import pygame
 import pygame.gfxdraw
-from pygame.locals import QUIT
 
 import numpy as np  # Import math modules
 
@@ -68,7 +67,7 @@ if __name__ == "__main__":
             particle.timestep()
 
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
