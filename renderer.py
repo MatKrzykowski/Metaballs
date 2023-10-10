@@ -31,5 +31,6 @@ class Renderer():
         self.draw_FPS(fps)
 
     def draw_FPS(self, fps):
+        fps = str(round(fps, 1))
         self.textSurfaceObj = self.fontObj.render("FPS: " + fps, True, BLACK)
         self.display_surf.blit(self.textSurfaceObj, self.textRectObj)

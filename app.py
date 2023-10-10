@@ -29,8 +29,7 @@ class App():
                 if event.type == pygame.QUIT:
                     return
 
-            fps = str(round(self.fpsClock.get_fps(), 1))
-            self.renderer.draw_frame(hue_arr, fps)
+            self.renderer.draw_frame(hue_arr, self.fpsClock.get_fps())
             pygame.display.update()
             self.fpsClock.tick(config.fps)
 
