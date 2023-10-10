@@ -25,8 +25,6 @@ def draw_FPS(screen, fontObj, textRectObj):
 
 if __name__ == "__main__":
     pygame.init()  # Initialize pygame
-
-    FPS = 60  # Frames per second
     fpsClock = pygame.time.Clock()  # Clock initialization
 
     # Prepare the display
@@ -61,7 +59,7 @@ if __name__ == "__main__":
             out=test)
         np.reciprocal(np.hypot(*test), out=inv_hypot)
         np.sum(inv_hypot, axis=2, out=q)
-        np.multiply(5 * 255, q, out=q)
+        np.multiply(config.particle_size * 255, q, out=q)
         r = np.where(q > 255, 255, q)
 
         with pygame.PixelArray(DISPLAYSURF) as px_array:
@@ -79,4 +77,4 @@ if __name__ == "__main__":
                 sys.exit()
 
         pygame.display.update()
-        fpsClock.tick(FPS)
+        fpsClock.tick(config.fps)

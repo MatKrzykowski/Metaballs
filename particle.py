@@ -9,8 +9,8 @@ class Particle():
     def __init__(self):
         self.x = np.random.random() * config.width
         self.y = np.random.random() * config.height
-        self.vx = (np.random.random() - 0.5) * 10
-        self.vy = (np.random.random() - 0.5) * 10
+        self.vx = (np.random.random() - 0.5) * config.av_speed
+        self.vy = (np.random.random() - 0.5) * config.av_speed
 
     def timestep(self):
         self.x += self.vx
