@@ -60,13 +60,13 @@ if __name__ == "__main__":
             out=test)
         np.reciprocal(np.hypot(*test), out=inv_hypot)
         np.sum(inv_hypot, axis=2, out=q)
-        np.multiply(config.particle_size * 255, q, out=q)
-        np.clip(q, 0, 255, out=q)
+        np.multiply(config.particle_size, q, out=q)
+        np.clip(q, 0, 1, out=q)
 
         lol = pygame.surfarray.pixels3d(DISPLAYSURF)
-        lol[:, :, 0] = 255
-        lol[:, :, 1] = q
-        lol[:, :, 2] = 255
+        lol[:, :, 0] = 255 - 128 * q
+        lol[:, :, 1] = 255 * (1 - q)
+        lol[:, :, 2] = 255 - 128 * q
         del lol
 
         draw_FPS(DISPLAYSURF, fontObj, textRectObj)  # Write the FPS text
