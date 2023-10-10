@@ -11,29 +11,9 @@ from pygame.locals import QUIT
 import numpy as np  # Import math modules
 
 from config import default_config as config
-
-# Colors
-PURPLE = (0, 128, 255)
-RED = (255, 0, 0)
+from particle import gen_particles
 
 FONTSIZE = 18
-
-
-class Particle():
-
-    def __init__(self):
-        self.x = np.random.random() * config.width
-        self.y = np.random.random() * config.height
-        self.vx = (np.random.random() - 0.5) * 10
-        self.vy = (np.random.random() - 0.5) * 10
-
-    def timestep(self):
-        self.x += self.vx
-        self.y += self.vy
-        if not 0 <= self.x <= config.width:
-            self.vx *= -1
-        if not 0 <= self.y <= config.height:
-            self.vy *= -1
 
 
 def draw_FPS(screen, fontObj, textRectObj):
@@ -58,7 +38,7 @@ if __name__ == "__main__":
     textSurfaceObj = fontObj.render('', True, (0, 0, 0))
     textRectObj = textSurfaceObj.get_rect()
 
-    particles = [Particle() for _ in range(config.n_particles)]
+    particles = gen_particles(config.n_particles)
 
     pos = np.zeros((2, config.width, config.height))
     for i in range(config.width):
